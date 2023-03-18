@@ -6,4 +6,4 @@ description: an example of a blog post with giscus comments
 categories: sample-posts external-services
 giscus_comments: true
 ---
-This post shows how to add GISCUS comments.
+This post is a test to see if the giscus comments work!
