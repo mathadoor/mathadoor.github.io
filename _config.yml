@@ -1,7 +1,7 @@
 # -----------------------------------------------------------------------------
 # Site settings
 # -----------------------------------------------------------------------------
-
+destination: docs
 title: # the website titaddle (if blank, full name will be used instead)
 first_name: Harpreet
 middle_name: 
