@@ -30,9 +30,6 @@
 <loc>http://localhost:4000/news/</loc>
 </url>
 <url>
-<loc>http://localhost:4000/repositories/</loc>
-</url>
-<url>
 <loc>http://localhost:4000/blog/tag/theory/</loc>
 </url>
 <url>

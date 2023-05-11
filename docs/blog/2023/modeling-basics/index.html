@@ -12,7 +12,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Modeling Basics and Statistical Bias | </title>
     <meta name="author" content="Harpreet  Matharoo">
-    <meta name="description" content="an example of a blog post with some math">
+    <meta name="description" content="A study of statistical bias for modeling a simple prediction problem.">
     <meta name="keywords" content="jekyll, jekyll-theme, academic-website, portfolio-website">
 
 
@@ -78,9 +78,6 @@
 
               <!-- Other pages -->
               <li class="nav-item ">
-                <a class="nav-link" href="/repositories/">repositories</a>
-              </li>
-              <li class="nav-item ">
                 <a class="nav-link" href="/cv/">cv</a>
               </li>
 
@@ -141,7 +138,7 @@
 
 <p>In the next section, I discuss what kind of models are appropriate to estimate the probability. To this end, we discuss two simple models with different capacity. The subsequent section presents the experiments I performed to contrast these models. I consider two different data generating processes as an approximation of the game to collect the data, which is use later to fit the models. I then present the results of these experiments, followed by a discussion contrasting the applicability of these models and our findings.</p>
 
-<h2 id="model-selection">Model Selection</h2>
+<h2 id="methodology">Methodology</h2>
 
 <p>First and foremost, we need a model to represent the behaviour of the coin. More specifically, we are interested in capturing certain aspects of the data-generating process. You may recall that the process of repeated coin toss is also known as Bernoulli trials. Here, we assume each coin toss is independent of the other and the coin has a probability p with the heads as the outcome of a toss. Thus, we can estimate p by performing a number of trials and computing the value that maximizes the probability. Before we go further, we need to emphasize the concept of probability here. The probability here represents a degree of plausibility that we measure in the range of 0 and 1. It is important to note this degree of plausibility is entirely a mathematical tool and may not represent reality itself. After all, the outcome of a coin toss is either heads or tails. Perhaps, we could accurately predict the exact outcome of the toss by running a multi-physics simulation that models the dynamics of the coin toss in the presence of air resistance and gravity. However, these efforts might be too complex to realize. We instead start with a simpler model based on our intuition of the data-generating process.</p>
 
@@ -201,7 +198,7 @@
 
 <p>The results of our experiments are plotted in the figures below. Figure 2 presents \(p_{MLE}\) computed for the data generated with Bernoulli coin. Dashed line represents the true value of p, solid lines represent the mean values of p estimated by Bernoulli and Markov model, and the shaded region represents the standard deviation for both the models. Notice both models are able to accurately estimate the true value of p as indicated by the proximity of the mean value to the true value. However, the estimation by the Markov model has higher variance than the Bernoulli model. This is because the Bernoulli model has fewer excess parameters to capture the underlying data generation process. On the other hand, Markov model has the parameter \(\delta\) which may overfit to the superficial irregularities causing the estimated p to have higher variance. Figure 4 further corroborate our claim. Notice the model fits a non-zero value to \(\delta\) for all experiments.</p>
 <div class="row mt-3">
-    <div class="col-sm mt-3 mt-md-0" text-align="center">
+    <div class="col-sm mt-3 mt-md-0" style="text-align: center;" text-align="center">
         <figure>
 
   <picture>
@@ -226,7 +223,7 @@
 <p>Figure 3 presents the results of fitting our models to the data generated for the Markov coin. Since Bernoulli model assumes \(\delta = 0\), it fails to account for the Markov property and ends up assigning a higher value to \(p\) than its true value. Markov model on the other hand is able to capture the true value of \(p\) accounting for the Markov property. We can see in Figure 4 that the model accurately predicts the value of \(\delta\).</p>
 
 <div class="row mt-3">
-    <div class="col-sm mt-3 mt-md-0" text-align="center">
+    <div class="col-sm mt-3 mt-md-0" style="text-align: center;" text-align="center">
         <figure>
 
   <picture>
@@ -252,7 +249,7 @@
 <p>Finally, note the spread in all figures reduce as we increase the number of samples per dataset. This is aligned with our expectations as larger dataset allows the model to capture more signal, which in turn increases its precision.</p>
 
 <div class="row mt-3">
-    <div class="col-sm mt-3 mt-md-0" text-align="center">
+    <div class="col-sm mt-3 mt-md-0" style="text-align: center;" text-align="center">
         <figure>
 
   <picture>
@@ -279,12 +276,41 @@
 
 <p>In this article, we studied the basics of modelling by considering two toy datasets. The datasets are generated by a biased coin with and without Markov property. We fitted two models with varying capacities to the datasets generated for these processes. We chose varying capacities to demonstrate the sample complexity of training them. The training objective is to estimate the probability of getting a head for a coin toss. We found Bernoulli Model(the one with lower capacity) requires fewer samples than Markov model(more capacious) to precisely estimate the probability of the Bernoulli coin. Both models are equally accurate. However, as we increase the number of samples per dataset, both models become more precise. On the other hand, the higher capacity of the Markov model allows it to accurately estimate the probability of the Markov coin, while Bernoulli model fails to capture the effect of the previous state. We argue the difference in this performance is because Markov model has more capacity thus it can overfit to superficial irregularities. It requires more samples to ignore them. On the other hand, simpler models like Bernoulli can easily ignore them as they assume their non-existence. However, models can be inaccurate if it fails to account for some aspects of the data generation process. This behaviour is clearly seen for the Markov coin.</p>
 
-<p>This phenomenon of how the alignment between the model and the data generating process affect the accuracy and the precision of the model is the classic case of statistical bias-variance trade-off. It is important to note the discussion on bias-variance trade-off in popular machine learning literature on the web attributes the difference in the prediction and the ground truth to the capacity of the model. However, this argument is incomplete as we must take the data generating process into account. A more capacious model does not have to exhibit low bias. Also, modern machine learning theory tells us more capacious model can increase the precision as well as the accuracy further when the models are highly overparameterized. Finally, statistical bias is just a part of the story. There are other forms of bias present in machine learning algorithms that I intend to cover in one of the subsequent articles.</p>
+<p>This phenomenon of how the alignment between the model and the data generating process affect the model accuracy and precision is a classic case of statistical bias-variance trade-off[1]. It is important to note the discussion on bias-variance trade-off in popular machine learning literature on the web attributes the difference in the prediction and the ground truth to the capacity of the model. However, this argument is incomplete as we must take the data generating process into account. A more capacious model does not have to exhibit low bias. Also, modern machine learning theory tells us more capacious model can increase both the accuracy and the precision[2]. Finally, statistical bias is just a part of the story. There are other forms of bias present in machine learning algorithms that I intend to cover in one of the subsequent articles.</p>
 
 <h2 id="references">References</h2>
+<p>[1] Hastie, T., Tibshirani, R., Friedman, J. H., &amp; Friedman, J. H. (2009). The elements of statistical learning: data mining, inference, and prediction (Vol. 2, pp. 1-758). New York: springer.
+[2] Belkin, M., Hsu, D., Ma, S., &amp; Mandal, S. (2019). Reconciling modern machine-learning practice and the classical bias–variance trade-off. Proceedings of the National Academy of Sciences, 116(32), 15849-15854.
+[3] Mitchell, T. M. (2007). Machine learning (Vol. 1). New York: McGraw-hill.</p>
+
+  </article><div id="giscus_thread" style="max-width: 800px; margin: 0 auto;">
+  <script>
+    let giscusTheme = localStorage.getItem("theme");
+    let giscusAttributes = {
+        "src": "https://giscus.app/client.js",
+        "data-repo": "mathadoor/mathadoor.github.io",
+        "data-repo-id": "R_kgDOIvjyVQ",
+        "data-category": "General",
+        "data-category-id": "DIC_kwDOIvjyVc4CU80N",
+        "data-mapping": "title",
+        "data-strict": "1",
+        "data-reactions-enabled": "1",
+        "data-emit-metadata": "0",
+        "data-input-position": "bottom",
+        "data-theme": giscusTheme,
+        "data-lang": "en",
+        "crossorigin": "anonymous",
+        "async": "",
+    };
 
 
-  </article>
+    let giscusScript = document.createElement("script");
+    Object.entries(giscusAttributes).forEach(([key, value]) => giscusScript.setAttribute(key, value));
+    document.getElementById("giscus_thread").appendChild(giscusScript);
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://giscus.app/?ref_noscript" rel="external nofollow noopener" target="_blank">comments powered by giscus.</a>
+</noscript>
+</div>
 </div>
 
     </div>
