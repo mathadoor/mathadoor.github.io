@@ -17,6 +17,10 @@
 <lastmod>2023-05-03T13:39:00-04:00</lastmod>
 </url>
 <url>
+<loc>http://localhost:4000/blog/2023/math/</loc>
+<lastmod>2023-05-10T11:12:00-04:00</lastmod>
+</url>
+<url>
 <loc>http://localhost:4000/</loc>
 </url>
 <url>
@@ -36,6 +40,12 @@
 </url>
 <url>
 <loc>http://localhost:4000/blog/tag/probability/</loc>
+</url>
+<url>
+<loc>http://localhost:4000/blog/tag/modeling/</loc>
+</url>
+<url>
+<loc>http://localhost:4000/blog/category/fundamentals/</loc>
 </url>
 <url>
 <loc>http://localhost:4000/blog/2023/</loc>
