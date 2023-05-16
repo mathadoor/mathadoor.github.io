@@ -1,9 +1,9 @@
 ---
 layout: post
 title: Modeling Basics and Statistical Bias
-date: 2023-05-10 11:12:00-0400
+date: 2023-05-16 11:12:00-0400
 description: A study of statistical bias for modeling a simple prediction problem. 
-tags: Theory Probability Modeling
+tags: Theory Probability Modeling Machine-Learning
 categories: Fundamentals
 giscus_comments: true
 ---
@@ -11,15 +11,19 @@ giscus_comments: true
 
 ## Introduction
 
-Following our discussion on mind-projection fallacy in my previous article, I want to now talk about what happens when we model a simple scenario. In this article, I take you through a fictitious example of modelling a prediction problem. We are given a coin and we are tasked to estimate the probability that it will fall on heads upon tossing. We have no idea how this coin behaves, but we might discover something advantageous by playing with it. We look to statistical learning methods to guide our discovery. 
+Following our discussion on the mind-projection fallacy in my [previous article](https://medium.com/@matharooh2/mind-projection-fallacy-8cf52a8db6b7), I now want to delve into what happens when we model a simple scenario. In this article, I take you through a fictitious example of modelling a prediction problem. Given a coin, our task is to estimate the probability that it will land on heads when tossed. Initially, we have no idea about this coin's behavior, but we aim to uncover its characteristics through experimentation, guided by statistical learning methods.
 
-In the next section, I discuss what kind of models are appropriate to estimate the probability. To this end, we discuss two simple models with different capacity. The subsequent section presents the experiments I performed to contrast these models. I consider two different data generating processes as an approximation of the game to collect the data, which is use later to fit the models. I then present the results of these experiments, followed by a discussion contrasting the applicability of these models and our findings.
+In the next section, I discuss what kind of models are appropriate to estimate this probability. Specifically, we explore two simple models, each with a different "capacity"—a concept I will explain later. The subsequent section presents the experiments I performed to contrast these models. Here, I introduce two different data generating processes—an approximation of the game used to collect the data—which are later utilized to fit the models. Following this, I present the results of these experiments and then engage in a discussion contrasting the applicability of these models. This journey will help us understand the nuances of model bias and variance, and how these elements influence our findings.
 
 ## Methodology
 
-First and foremost, we need a model to represent the behaviour of the coin. More specifically, we are interested in capturing certain aspects of the data-generating process. You may recall that the process of repeated coin toss is also known as Bernoulli trials. Here, we assume each coin toss is independent of the other and the coin has a probability p with the heads as the outcome of a toss. Thus, we can estimate p by performing a number of trials and computing the value that maximizes the probability. Before we go further, we need to emphasize the concept of probability here. The probability here represents a degree of plausibility that we measure in the range of 0 and 1. It is important to note this degree of plausibility is entirely a mathematical tool and may not represent reality itself. After all, the outcome of a coin toss is either heads or tails. Perhaps, we could accurately predict the exact outcome of the toss by running a multi-physics simulation that models the dynamics of the coin toss in the presence of air resistance and gravity. However, these efforts might be too complex to realize. We instead start with a simpler model based on our intuition of the data-generating process. 
+First and foremost, we need a model to represent the coin's behavior. More specifically, we aim to capture certain aspects of the data-generating process. You may recall that the process of repeated coin tosses is also known as Bernoulli trials. In this case, we assume each coin toss is independent and that each toss results in heads with a probability denoted as 'p'. Thus, we can estimate 'p' by performing a number of trials and computing the value that maximizes the probability of observing the number of heads we actually get. 
 
-Now, we start by generating samples. Suppose we perform $$N$$ trials out of which we get m heads and n tails. It can be shown the fraction of trial for which the coin fell on heads is the maximum likelihood estimated(MLE) value of $$p$$. In layman’s terms, this is the value of $$p$$ that maximizes the plausibility of observing the outcomes we did given the data model. To proceed further, let us first go through how the above computation unfolds to make an MLE of $$p$$. We represent the outcome of trial $$i$$ as $$X_i$$. The probability that we observe such outcomes condition on the value of $$p$$  is:
+Before we go further, it is crucial to understand the concept of probability here. The probability represents a degree of plausibility, measured in the range of 0 and 1. This degree of plausibility is a mathematical tool and may not represent reality itself. After all, the outcome of a coin toss is binary: it is either heads or tails. In theory, we might be able to predict the exact outcome of the toss by running a sophisticated multi-physics simulation that models the dynamics of the coin toss considering factors like air resistance and gravity. However, these efforts might be overly complex. Instead, we start with a simpler model based on our intuition of the data-generating process.
+
+Now, let us dive into generating samples. Suppose we perform $$N$$ trials, resulting in m heads and n tails. It can be shown the fraction of trial in which the coin lands on heads is the maximum likelihood estimate(MLE) of $$p$$. In layman’s terms, this is the value of $$p$$ that maximizes the likelihood of observing the outcomes we actually did, given the data model. 
+
+The likelihood calculation unfolds as follows: we represent the outcome of trial $$i$$ as $$X_i$$. The probability that we observe such outcomes condition on the value of $$p$$  is:
 
 $$
 P(X_1, X_2, .. X_n|p) = \prod_i^n P(X_i|p)
@@ -39,7 +43,9 @@ $$
 \Rightarrow p_{MLE} = \cfrac{m}{m+n}
 $$
 
-It is customary to consider several models for comparison. To this end, we consider a slight variation of the Bernoulli trials. We lift the condition of independence between trials. We chose a model with Markov property between subsequent trials. If the coins is facing heads up, it is likely to come up with heads by probability $$p + \delta$$, otherwise it is $$p - \delta$$. The figure below illustrates the difference between the state diagrams of the model without and with Markov property.
+Now, let us take a step further and consider a more complex model. This model, unlike the Bernoulli trials, doesn't assume each trial to be independent. Instead, it incorporates the outcome of the previous trial into the prediction for the next one. This is known as the Markov property. In simple terms, it is like remembering the outcome of the last toss when predicting the next one.  For instance, if the coin lands heads up, it is more likely to come up with heads in the next trial with a probability $$p + \delta$$. If it lands tails up, the probability it lands heads in the next trial is $$p - \delta$$. This is akin to saying that the coin has some 'memory' of the last outcome which influences the next.
+
+This model's complexity - or 'capacity' - is higher than the simple Bernoulli trial. In the context of machine learning, the capacity of a model refers to the complexity of the functions it can learn. A model with a higher capacity can learn more complex patterns, but it is also more prone to overfitting, which is the trap of modeling the random noise in the data rather than the underlying pattern. The figure below illustrates the state diagrams for both models, one without the Markov property and one with it. The added complexity of the Markov model is visible in its state diagram as asymmetric transitions heads vs tails, representing the influence of the previous trial on the next one.
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -50,27 +56,33 @@ It is customary to consider several models for comparison. To this end, we consi
     Figure 1. State Diagram of the Bernoulli trials with and without Markov property.
 </div>
 
-We are now required to estimate both the parameters in case of the model with Markov property. Note, the one with Markov property is generalization of the one without. By setting $\delta=0$, we recover Bernoulli trial. Now, just like in the case of Bernoulli trials, we wish to estimate the maximum likelihood values of both $$\delta$$ and $$p$$. The likelihood is formulated as follows:
+To compute the likelihood for this model, we need to approach the problem differently. We are now required to estimate both $$p$$ and $$\delta$$. Note,the one with Markov property is generalization of the one without. By setting $\delta=0$, we recover Bernoulli trial. The likelihood is formulated as follows:
 
 $$
 P(X_1, X_2, .. X_n|p) = P(X_o|p, \delta)\prod_i^n P(X_i|p, X_{i-1})
 $$
 
-We divide our sequence of trials into pairs of subsequent trials to reduce the above formulation further. We can have four types of such pairs - $$HH$$, $$HT$$, $$TH$$, and $$TT$$. Suppose we have $$m$$, $$n$$, $$r$$ and $$s$$ number of occurrences of such pairs. Then the above formulation reduces to the following expression:
+We divide our sequence of trials into pairs of subsequent trials to simplify the likelihood computation. We can have four types of such pairs - $$HH$$, $$HT$$, $$TH$$, and $$TT$$. Suppose we have $$m$$, $$n$$, $$r$$ and $$s$$ number of occurrences of such pairs. Then the above formulation reduces to the following expression:
 
 $$
 P(X_1, X_2, .. X_n|p) = P(X_o|p, \delta) (p \ + \delta)^m(p \ - \delta)^r(1 - (p \ + \delta))^n(1 - (p \ - \delta))^s
 $$
 
-We can then compute the formula for the MLE values using calculus just like we did before. Given the complexity of the model, we will estimate these values numerically instead.
+This might seem complex, but it is just a mathematical way to account for the varying probabilities based on the outcome of the previous toss. The MLE values for $$p$$ and $$\delta$$ can be calculated using calculus, as we did before. However, due to the complexity of the model, we will estimate these values numerically by performing a grid search.
+
+By comparing the performance of these two models - the simpler Bernoulli trial and the more complex Markov model - we can begin to understand the trade-offs between model complexity and accuracy, a concept central to the understanding of model bias and variance. When a model is too simple to capture the nuances of the data, it might have a high bias, leading to inaccurate predictions. This is often the case with the Bernoulli model, which assumes that each coin toss is independent of the others. On the other hand, a more complex model, like the Markov model, can capture more detailed patterns in the data, reducing bias. However, with increased complexity comes the risk of overfitting, which occurs when a model adapts too closely to the training data and performs poorly on unseen data. This is a manifestation of high variance.
+
+In the following sections, we will delve deeper into these concepts, empirically contrasting the performance of these models and discussing how this simple coin toss scenario can shed light on the intricacies of model bias and variance. Stay tuned for the exciting exploration ahead!
 
 ## Experiments
 
-We perform four experiments in total. We generate two types of datasets assuming Bernoulli trials without Markov property and with Markov property. We simulated these datasets by assuming $$p = 0.7$$ and $$\delta = 0.1$$. These values are chosen arbitrarily so that the coin is biased in both the cases and the data generated with Markov property has a more complex process than the without. We vary the number of samples per dataset from 10 to 100 in steps of 10. For each setting, we generate 100 datasets to accurately compute the mean values of $$p_{MLE}$$ and $$\delta_{MLE}$$.
+In total, we carry out four distinct experiments. We generate two types of datasets assuming Bernoulli trials without the Markov property and another assuming Bernoulli trials with the Markov property. We simulated these datasets by assuming $$p = 0.7$$ and $$\delta = 0.1$$.We arbitrarily selected these values to ensure the coin is biased in both cases, and to ensure that the data generated with the Markov property represents a more complex process than the data without it.
+
+We vary the number of samples per dataset from 10 to 100 in steps of 10. For each of these settings, we generate 100 datasets. This allows us to accurately compute the mean values of $$p_{MLE}$$ and $$\delta_{MLE}$$. These experiments will provide us with a clearer understanding of how the chosen models perform under different conditions.
 
 ## Results and Discussion
 
-The results of our experiments are plotted in the figures below. Figure 2 presents $$p_{MLE}$$ computed for the data generated with Bernoulli coin. Dashed line represents the true value of p, solid lines represent the mean values of p estimated by Bernoulli and Markov model, and the shaded region represents the standard deviation for both the models. Notice both models are able to accurately estimate the true value of p as indicated by the proximity of the mean value to the true value. However, the estimation by the Markov model has higher variance than the Bernoulli model. This is because the Bernoulli model has fewer excess parameters to capture the underlying data generation process. On the other hand, Markov model has the parameter $$\delta$$ which may overfit to the superficial irregularities causing the estimated p to have higher variance. Figure 4 further corroborate our claim. Notice the model fits a non-zero value to $$\delta$$ for all experiments.
+The results of our experiments are plotted in the figures below. Figure 2 presents $$p_{MLE}$$ computed for the data generated with Bernoulli coin.The dashed line represents the true value of p, while the solid lines represent the mean values of p estimated by Bernoulli and Markov model. The shaded region represents the standard deviation for both the models. Notice both models can accurately estimate the true value of p, as indicated by the proximity of the mean value to the true value.  However, the estimation by the Markov model has higher variance than the Bernoulli model. This is because the Bernoulli model has fewer parameters to capture the underlying data generation process. On the other hand, Markov model has an extra parameter $$\delta$$ which may overfit to the superficial irregularities causing the estimated p to have higher variance. Figure 4 further corroborates our claim. Notice the model fits a non-zero value to $$\delta$$ for all experiments.
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0" style="text-align: center;"  text-align=center>
         {% include figure.html path="assets/img/modelingbasics/bernoulli_data.png"  %}
@@ -79,7 +91,8 @@ The results of our experiments are plotted in the figures below. Figure 2 presen
 <div class="caption">
     Figure 2. Maximum Likelihood Estimate of p for Bernoulli Coin with different models
 </div>
-Figure 3 presents the results of fitting our models to the data generated for the Markov coin. Since Bernoulli model assumes $$\delta = 0$$, it fails to account for the Markov property and ends up assigning a higher value to $$p$$ than its true value. Markov model on the other hand is able to capture the true value of $$p$$ accounting for the Markov property. We can see in Figure 4 that the model accurately predicts the value of $$\delta$$.
+
+Figure 3 presents the results of fitting our models to the data generated for the Markov coin. Since Bernoulli model assumes $$\delta = 0$$, it fails to account for the Markov property and ends up estimating a higher value for $$p$$ than its true value. It is interesting to note the estimated value is higher instead of lower. Why? In contrast, Markov model accurately captures the true value of $$p$$ by accounting for the Markov property. We can see in Figure 4 that the model accurately predicts the value of $$\delta$$.
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0" style="text-align: center;" text-align=center>
@@ -90,7 +103,7 @@ Figure 3 presents the results of fitting our models to the data generated for th
     Figure 3. Maximum Likelihood Estimate of p for Markov Coin with different models
 </div>
 
-Finally, note the spread in all figures reduce as we increase the number of samples per dataset. This is aligned with our expectations as larger dataset allows the model to capture more signal, which in turn increases its precision.
+Finally, notice the spread in all figures decreases as we increase the number of samples per dataset. This trend aligns with our expectations, as a larger dataset allows the model to capture more of the underlying pattern, thereby improving its precision. This is a clear demonstration of the bias-variance tradeoff: as we increase our sample size, our model's variance decreases, leading to more reliable and precise estimates. It also demonstrates the bias-variance tradeoff for a model occurs in the context of a data generating process. We can comment on the capacity of a model on its own, but a discussion on bias and variance requires the context of a data generating process.
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0" style="text-align: center;" text-align=center>
@@ -102,10 +115,13 @@ Finally, note the spread in all figures reduce as we increase the number of samp
 </div>
 
 ## Conclusion
+In this study, we explored the fundamental concepts of modelling using two basic datasets. These datasets were generated using a biased coin, incorporating both independent Bernoulli trials and a Markov property. We applied two models of varying capacity to these datasets, aiming to estimate the probability of obtaining a 'heads' outcome in a coin toss. Our findings revealed that the Bernoulli Model, which has lower capacity, requires fewer samples than the more complex Markov model to accurately estimate the probability for the Bernoulli coin. However, as we increased the number of samples per dataset, both models demonstrated improved precision.
 
-In this article, we studied the basics of modelling by considering two toy datasets. The datasets are generated by a biased coin with and without Markov property. We fitted two models with varying capacities to the datasets generated for these processes. We chose varying capacities to demonstrate the sample complexity of training them. The training objective is to estimate the probability of getting a head for a coin toss. We found Bernoulli Model(the one with lower capacity) requires fewer samples than Markov model(more capacious) to precisely estimate the probability of the Bernoulli coin. Both models are equally accurate. However, as we increase the number of samples per dataset, both models become more precise. On the other hand, the higher capacity of the Markov model allows it to accurately estimate the probability of the Markov coin, while Bernoulli model fails to capture the effect of the previous state. We argue the difference in this performance is because Markov model has more capacity thus it can overfit to superficial irregularities. It requires more samples to ignore them. On the other hand, simpler models like Bernoulli can easily ignore them as they assume their non-existence. However, models can be inaccurate if it fails to account for some aspects of the data generation process. This behaviour is clearly seen for the Markov coin. 
+Interestingly, the higher capacity of the Markov model enabled it to accurately estimate the probability for the Markov coin, while the Bernoulli model fell short in capturing the influence of the previous state. We contend that this is due to the Markov model's higher capacity, which allows it to overfit to minor irregularities in the data, necessitating more samples to mitigate this effect. Simpler models like the Bernoulli model can readily ignore these irregularities due to its inherent assumptions about the data-generating process. However, this simplicity can lead to inaccuracies if the model fails to account for certain aspects of the data generation process, as we observed with the Markov coin.
 
-This phenomenon of how the alignment between the model and the data generating process affect the model accuracy and precision is a classic case of statistical bias-variance trade-off[1]. It is important to note the discussion on bias-variance trade-off in popular machine learning literature on the web attributes the difference in the prediction and the ground truth to the capacity of the model. However, this argument is incomplete as we must take the data generating process into account. A more capacious model does not have to exhibit low bias. Also, modern machine learning theory tells us more capacious model can increase both the accuracy and the precision[2]. Finally, statistical bias is just a part of the story. There are other forms of bias present in machine learning algorithms[3] that I intend to cover in one of the subsequent articles.
+This study's findings illustrate a classic case of the bias-variance trade-off in modeling[1]. It is crucial to note that while much of the popular literature on bias-variance trade-off attributes the difference between prediction and ground truth to the model capacity, this argument overlooks the critical role of the data generating process.  A model with greater capacity does not necessarily exhibit low bias. Also, modern machine learning theory suggests more capacious model can increase both the accuracy and the precision at the same time[2]. 
+
+In conclusion, while statistical bias is a significant factor, it is just one part of the larger narrative. Other forms of bias exist in machine learning algorithms that are equally important to consider[3]. I plan to delve into these in subsequent articles, expanding our understanding of bias in machine learning.
 
 ## References
 [1] Hastie, T., Tibshirani, R., Friedman, J. H., & Friedman, J. H. (2009). The elements of statistical learning: data mining, inference, and prediction (Vol. 2, pp. 1-758). New York: springer.  
