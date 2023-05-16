@@ -23,7 +23,7 @@ Before we go further, it is crucial to understand the concept of probability her
 
 Now, let us dive into generating samples. Suppose we perform $$N$$ trials, resulting in m heads and n tails. It can be shown the fraction of trial in which the coin lands on heads is the maximum likelihood estimate(MLE) of $$p$$. In layman’s terms, this is the value of $$p$$ that maximizes the likelihood of observing the outcomes we actually did, given the data model. 
 
-The likelihood calculation unfolds as follows: we represent the outcome of trial $$i$$ as $$X_i$$. The probability that we observe such outcomes condition on the value of $$p$$  is:
+The likelihood calculation unfolds as follows: we represent the outcome of trial $$i$$ as $$X_i$$. The probability that we observe such outcomes, conditioned on the value of $$p$$  is:
 
 $$
 P(X_1, X_2, .. X_n|p) = \prod_i^n P(X_i|p)
