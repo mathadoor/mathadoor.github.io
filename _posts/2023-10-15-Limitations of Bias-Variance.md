@@ -1,8 +1,8 @@
 ---
 layout: post
-title: On the Limitation of Bias-Variance Trade-off
-date: 2023-09-24 11:12:00-0400
-description: Reflections on the limitations of statistical bias.
+title: Reflections on Bias-Variance Trade-off
+date: 2023-10-15 11:12:00-0400
+description: Reflections on bias-variance trade-off.
 tags: Modeling Machine-Learning
 categories: Reflections
 giscus_comments: true
@@ -10,8 +10,21 @@ giscus_comments: true
 
 
 ## Introduction
-In a recent discussion with a fellow ML enthusiast, I realized my understanding of bias-variance trade was unclear. In an effort to add some clarity, I am writing this article as a reflection on the limitations of bias-variance trade-off. The information presented is synthesized from a collection of articles. I hope to pursue some of the claims I made below in more detail and support with rigorous experiments in the future.  
+In a recent discussion with a fellow ML enthusiast, I realized my understanding of bias-variance tradeoff was unclear. I intuitively defended the stance that the tradeoff is no longer useful in understanding neural network, but I did not have a firm grounding to support the stance. In an effort to add some clarity, I am writing this article as a reflection on the applicability of bias-variance trade-off. The information presented is partly synthesized from my personal experience and another part from a collection of peer-reviewed publication. I hope to pursue some of the claims I made below in more detail and support with rigorous experiments in the future.  
 
+## Parameter Estimation 
+<!-- Explain what parameter estimation is -->
+The whole idea of bias and variance comes into play from the exercise of estimating some hidden parameter. By hidden I mean we do not have direct access to it. Such a parameter can just be seen as a figment of imagination, but serves a crucial purpose in fulfilling some larger objective. To motivate the discussion, suppose I am a medical professional and I am interested in designing a diagnostic test for type-II diabetes. My understanding of bodily functions informs me the fasting blood glucose level of a diabetic patient may be higher than the ones without. Thus, I could potentially use this as a diagnostic test. So I put my head down and start designing my experiments with the objective of comparing  
+
+<!-- Explain How parameters are estimated -->
+
+<!-- How Bias-variance comes into play when estimating parameters -->
+
+<!-- What is the limitation of this kind of bias-variance -->
+
+<!-- Inductive Bias -->
+
+<!-- Application of bias-variance trade-off to modern deep learning -->
 In my previous [blog](https://mathadoor.github.io/blog/2023/modeling-basics/), I discussed the implication of statistical bias and variance. We had a biased coin and were interested in estimating the probability($$p_{head}$$) that it lands on a head. We were aware of the real value of $$p_{head}$$, estimated this value as $$\hat{p}_{head}$$ by sampling data and applying statistical methods to it. We referred to the sampled data as the training set and fitted our model to this set. The end goal of this exercise was to demonstrate the variation of the quality of fit based on the variation in the training set. The variation was performed along two dimensions:   
 
 1) Resampling the training set for a fixed number of tosses. and   
