@@ -1,6 +1,6 @@
 # mathadoor.github.io
 
-Harpreet Matharoo's personal site and blog ("Hermes"), built with [Quarto](https://quarto.org) and served at [mathadoor.github.io](https://mathadoor.github.io).
+Harpreet Matharoo's personal site and blog, built with [Quarto](https://quarto.org) and served at [mathadoor.github.io](https://mathadoor.github.io).
 
 ## Local development
 

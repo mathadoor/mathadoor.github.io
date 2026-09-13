@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-Harpreet Matharoo's personal site and blog ("Hermes"), built with [Quarto](https://quarto.org) and served at `https://mathadoor.github.io` (a GitHub user page, no custom domain). Previously a Jekyll site on the al-folio theme; migrated to Quarto to cut down on theme/plugin machinery.
+Harpreet Matharoo's personal site and blog, built with [Quarto](https://quarto.org) and served at `https://mathadoor.github.io` (a GitHub user page, no custom domain). Previously a Jekyll site on the al-folio theme; migrated to Quarto to cut down on theme/plugin machinery.
 
 ## Commands
 
