@@ -1,0 +1,13 @@
+---
+title: "Recognizing Handwritten Mathematical Expressions"
+description: "An end-to-end ML application for translating handwritten mathematical expressions to LaTeX"
+date: 2023-10-01
+categories: [Theory, Modeling, OCR]
+comments: false
+---
+
+Redirecting to [the live app](https://image2latex.streamlit.app/)...
+
+```{=html}
+<meta http-equiv="refresh" content="0; url=https://image2latex.streamlit.app/">
+```

@@ -1,0 +1,11 @@
+---
+title: "Hermes"
+subtitle: "Exploring the world of modeling, machine learning, and software engineering one step at a time."
+page-layout: full
+listing:
+  contents: "*/*/index.qmd"
+  type: default
+  sort: "date desc"
+  categories: true
+  feed: true
+---

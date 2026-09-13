@@ -1,0 +1,13 @@
+---
+title: "Mind Projection Fallacy"
+description: "We discuss the notion of mind-projection fallacy, where we fail to distinguish between our imagination and reality itself."
+date: 2023-05-03
+categories: [Theory, Philosophy, Probability]
+comments: false
+---
+
+Redirecting to [the full article](https://medium.com/@matharooh2/mind-projection-fallacy-8cf52a8db6b7)...
+
+```{=html}
+<meta http-equiv="refresh" content="0; url=https://medium.com/@matharooh2/mind-projection-fallacy-8cf52a8db6b7">
+```
