@@ -1,0 +1,13 @@
+---
+title: "Transformer Exposition"
+description: "An interactive tutorial of the transformer architecture for neural machine translation."
+date: 2023-07-31
+categories: [Modeling, NLP]
+comments: false
+---
+
+Redirecting to [the interactive tutorial](https://mathadoor.github.io/TransformerExposition/)...
+
+```{=html}
+<meta http-equiv="refresh" content="0; url=https://mathadoor.github.io/TransformerExposition/">
+```

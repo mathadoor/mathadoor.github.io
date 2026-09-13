@@ -1,4 +1,0 @@
-User-agent: *
-Disallow:
-
-Sitemap: https://mathadoor.github.io/sitemap.xml

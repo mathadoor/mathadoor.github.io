@@ -1,0 +1,25 @@
+project:
+  type: website
+
+website:
+  title: "Harpreet Matharoo"
+  site-url: https://mathadoor.github.io
+  navbar:
+    left:
+      - href: index.qmd
+        text: About
+      - href: blog/index.qmd
+        text: blog
+  comments:
+    giscus:
+      repo: mathadoor/mathadoor.github.io
+      repo-id: R_kgDOIvjyVQ
+      category: General
+      category-id: DIC_kwDOIvjyVc4CU80N
+      mapping: title
+      reactions-enabled: true
+      input-position: bottom
+
+format:
+  html:
+    theme: [flatly, darkly]
