@@ -1,96 +1,58 @@
 ---
 title: "Reflections on Bias-Variance Trade-off"
 description: "Reflections on bias-variance trade-off."
-date: 2023-10-15
+date: 2026-09-17
 categories: [Modeling, Machine-Learning]
 ---
 
 ## Introduction
-I studied bias-variance trade-off six years ago for the first time. Since then I have accumulated a lot more knowledge about machine learning and the field as a 
-whole has genuinely progressed quite a bit. In this piece, I will be reflecting on how bias-variance trade-off appears in ML modeling.
+I studied the bias-variance trade-off six years ago for the first time. Since then I have accumulated a lot more knowledge about machine learning, and the field as a whole has genuinely progressed quite a bit. In this piece, I reflect on my experience working with this trade-off.
 
-## What is Bias-Variance trade-off?
-The main idea behind ML you are given some data generating function and your objective is to learn some aspect of the data it produces. Some examples are:
+## What I was originally taught
 
+Originally, I was taught bias-variance as a way to tune model hyperparameters. Bias is how far the model's predictions are, on average, from the true value being predicted, and variance is how sensitive the model's predictions are to the particular training set it saw. If I sampled a new training set from the same distribution, how much the model's predictions on a fixed test point would change. As you reduce bias, the model fits the training data more closely, but it also becomes more sensitive to which training set it happened to see. So naturally, as you decrease bias, variance tends to increase, and vice versa. Bias and variance are also often correlated with model complexity: high bias implies low complexity, and low bias implies high complexity.
 
-|Task | Data Generating Function | Aspect of Data (objective) |
-| ----------------- | -------------------------| ---------------------------|
-| Classify an email into spam                | Emails                   | Whether it's a spam or not                                     | 
-| Cluster customers into various segments    | Customer activity        | Insights into customer purchasing activity                     |
-| Simulate a user activity on platform       | User activity            | Regeneration of user activity to apply to new product surfaces | 
+Bias and variance aren't just qualitative concepts we use to tune a model. The expected test prediction error also decomposes exactly into these terms. The expected squared error between the model's prediction and the ground truth $y$ at a given point is:
 
-In all of the above cases, the function generating the underlying data is quite complex and covers many aspects of it. For example, email generation 
-activity depends on your profession, personality, writing style etc. There are no universal laws such as our beloved Newton's laws of motion that we can fall back
-to explain the how emails are generated. All we can do is look at some emails, see which ones are spam and not, try to extract the pattern out of it, and
-hope it generalizes to the emails we have not seen yet. This is where machine learning comes in handy.
+$$Error_{y} = \left(y - \mathbb{E}[\hat{y}]\right)^2 + \mathbb{E}\left[(\mathbb{E}[\hat{y}]-\hat{y})^2\right] = \text{bias}^2 + \text{variance}$$
 
-In an ideal world, we will have infinite data, inifinite computational and time resources and models capable
-of training on infinite data. In that case, we can ensure model generalizes. But since we live in a finite world, we have
-to make some approximations to make learning possible. So, you first select data that you believe is a good enough 
-representative of the target aspect of the data from this generating function. Then you pick an algorithm that fits 
-this data well. The whole process looks like this:  
-- Data selection: the selection process ensures target is well representative.  
-- Model training: process of fitting a model to the selected data.   
-- Model evaluation: evaluating the model to understand to what extent it generalizes to unseen data.  
+(A complete decomposition also adds an irreducible noise term, $\sigma^2$, but I'll leave that aside here since it doesn't depend on the model.)
 
-*Write about how in the approximating process, some potential errors are introduced and how we calculate them*
+Notice that this equation doesn't by itself imply that bias and variance must trade off against each other, nor that low bias necessarily means high complexity. But this pairing tends to hold in practice because real data carries noise. At low complexity, the model captures less of the underlying signal, so bias is high, but variance is low because the model isn't sensitive to the particular noise in the training set. As complexity increases, the model captures more signal and, beyond a certain point, it also starts fitting the noise itself, which drives variance up. This is what gives the *impression* of a strict trade-off. I thought that was directionally correct for most practical cases, until I took a course on deep learning.
 
-## Mathematical definition
+## Where the trade-off breaks down
 
-*Mathematically derive how bias variance trade-off work*
+In deep learning, I learned about CNNs and saw that overparameterization (much higher complexity than the classical picture would recommend) routinely helped rather than hurt. VGG-16, for instance, was trained on ImageNet (~1M images) despite having more than 138 million parameters [^vgg]. It was state-of-the-art at the time, and the preference for overparameterized models has persisted since. Researchers have offered a couple of different explanations for this:
 
-## Bias-Variance in Traditional ML
+- **Loss-landscape smoothing**: a neural network's loss landscape is often riddled with local minima, and optimizers like Adam use momentum to try to escape shallow or bad ones. But the search can still get stuck. Several studies have shown that overparameterization smooths the loss landscape, reducing the prevalence of bad local minima and the optimizer's tendency to get pulled into them [^landscape].
 
-*Demonstrate bias-variance in traditional ML*
+- **Double descent**: researchers found that the test-error-vs-complexity curve actually has two distinct regimes [^belkin] [^nakkiran]. As complexity increases from zero, test error first decreases and then increases, exactly as the classical bias-variance trade-off predicts, up to the *interpolation threshold*, where the number of parameters roughly equals the number of training points. Past that threshold, further increasing the number of parameters drives test error back down again. One explanation is the implicit regularization of gradient descent: when multiple solutions $w_1, w_2, \dots$ satisfy $y = Xw$ exactly, gradient descent is biased toward the one with the smallest Euclidean norm, $w_{\text{preferred}} = \arg\min_k \|w_k\|$ [^implicit]. In linear regression this can be shown analytically, since the variance of the estimator scales with $\|w_k\|^2$. So a smaller-norm solution means lower variance, and hence lower test error, once you're past the interpolation threshold.
 
-## Bias Variance in Neural Network
+Learning about this opened up the possibility that the bias-variance trade-off doesn't hold universally in practical cases.
 
-*Show affect of over parameterization and double descent*
+## Revisiting the trade-off
 
-## Bias Variance in the era of LLM
+Over the past few years, I've spent a lot of time working with zero-to-few-shot prompting of LLMs, both for work and personal study. Watching how they behave has made me think again about how this error decomposition plays out for LLMs. Here's what I've seen:
 
-*Talk about how in LLM era, the product exploration etc has been accelerated. We now use zero-shot capabilities of model to predict and that 
-we should treat not only examples as data but the information in prompt specification as data as well and giving too much of it can introduce 
-variance or bias. It would be great to demonstrate this, but I am not sure how.*
+- Providing instructions to the model improves its predictions up to a point. Beyond that point, instructions can start to conflict with each other, or the person writing them over-indexes on the specific examples they've personally seen or believe to be representative.
+- The number of examples and their diversity positively correlate with prediction accuracy — again, only up to a point. Beyond that point, the model over-indexes on the provided examples and loses its ability to generalize to new ones.
 
-## Concluding Remarks
-*Will need to see how these concluding remarks come to be*
+Putting these together, I've come to think of an LLM prompting task's accuracy as depending on:
 
+- **Information content of the prompt**: too little and too much both hurt accuracy; there's a sweet spot in the middle.
+- **Information coherence of the prompt**: low coherence reliably hurts accuracy.
+- **Number of examples**: much like traditional training, more examples help up to a point, then a bias-variance-like trade-off sets in — the model starts overfitting to the specific examples shown rather than the underlying task.
+- **Sample diversity**: for a fixed number of examples, higher diversity correlates with better accuracy.
 
+For the next little while, I might try to think about how to approach these ideas numerically.
 
+[^vgg]: Simonyan, K., & Zisserman, A. (2014). *Very Deep Convolutional Networks for Large-Scale Image Recognition*. [arXiv:1409.1556](https://arxiv.org/abs/1409.1556)
 
+[^landscape]: Karhadkar, K., Murray, M., Tseran, H., & Montúfar, G. (2023). *Mildly Overparameterized ReLU Networks Have a Favorable Loss Landscape*. [arXiv:2305.19510](https://arxiv.org/abs/2305.19510); Nguyen, Q., & Hein, M. (2017). *The Loss Surface of Deep and Wide Neural Networks*. [arXiv:1704.08045](https://arxiv.org/abs/1704.08045); [Double Descent — Theorem Path](https://theorempath.com/topics/double-descent)
 
+[^belkin]: Belkin, M., Hsu, D., Ma, S., & Mandal, S. (2019). *Reconciling Modern Machine-Learning Practice and the Classical Bias–Variance Trade-off*. PNAS. [arXiv:1812.11118](https://arxiv.org/abs/1812.11118)
 
+[^nakkiran]: Nakkiran, P., Kaplun, G., Bansal, Y., Yang, T., Barak, B., & Sutskever, I. (2019). *Deep Double Descent: Where Bigger Models and More Data Hurt*. [arXiv:1912.02292](https://arxiv.org/abs/1912.02292)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+[^implicit]: Gunasekar, S., Lee, J., Soudry, D., & Srebro, N. (2018). *Characterizing Implicit Bias in Terms of Optimization Geometry*. [PMLR v80](http://proceedings.mlr.press/v80/gunasekar18a/gunasekar18a.pdf)
+</content>
